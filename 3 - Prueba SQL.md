@@ -46,6 +46,9 @@ solo el último registro, el cual se supone que contiene los datos válidos.
 Diseña una consulta que borre solo los datos que son erroneos. Adicionalmente,
 ¿Crees que la tabla tiene algún error de diseño?. De ser así, ¿Cómo la mejorarías?
 
+ reza@thinkpad:/var/www/html/project$ mysqldump -uUsername -pPassword DBname > filename.sql
+
+y luego entramos a mysql y borramos los duplicados:
 
  mysql> DELETE imp1 from IMPUTACION AS imp1 
 	INNER JOIN IMPUTACION as imp2
@@ -66,31 +69,31 @@ SELECT
     ( Round(Sum(`TABLE_C`.`field_3877`), 0) ) AS `amount`, 
     ( Round(Sum(`TABLE_C`.`field_3881`), 0) ) AS `budget_deviation_amount`,
     ( Round(Sum(`TABLE_C`.`field_3878`), 0) ) AS `budget_amount`,
-	`TABLE_E`.`TEXT_FIELD_E` AS `Description`
+    `TABLE_E`.`TEXT_FIELD_E` AS `Description`
+	
 FROM  `TABLE_C` 
     INNER JOIN `TABLE_F` ON `TABLE_C`.`field_3874` = `TABLE_F`.`id` 
     INNER JOIN `TABLE_D` ON `TABLE_C`.`field_3873` = `TABLE_D`.`id` 
-    INNER JOIN `TABLE_E` ON `TABLE_F`.`id` = `TABLE_E`.`field_4024` 
-    LEFT JOIN `TABLE_G` ON (
-        `TABLE_E`.`field_4033` = `TABLE_G`.`id` AND
-        `TABLE_E`.`field_4034` = `TABLE_G`.`field_4015` AND
-        `TABLE_E`.`TEXT_FIELD_E` = `TABLE_G`.`TEXT_FIELD_G`
-    )
-    INNER JOIN `TABLE_H` ON `TABLE_D`.`id` = `TABLE_H`.`field_4785` 
+    INNER JOIN `TABLE_E` ON `TABLE_F`.`id` = `TABLE_E`.`field_4024`
     INNER JOIN `TABLE_A` ON `TABLE_D`.`id` = `TABLE_A`.`field_4052`
-    INNER JOIN `TABLE_B` ON `TABLE_H`.`field_4786` = `TABLE_B`.`id` 
+    INNER JOIN `TABLE_H` ON `TABLE_D`.`id` = `TABLE_H`.`field_4785`
+    INNER JOIN `TABLE_B` ON `TABLE_H`.`field_4786` = `TABLE_B`.`id`
+     
 WHERE 
     (
         UPPER(`TABLE_A`.`field_4302`) = 'ENTITY' OR
         `TABLE_B`.`field_4302` like 'SECONDARY%'
     ) AND
-    `TABLE_A`.`field_4307` = 1 
+    `TABLE_A`.`field_4307` = 1
+    
 GROUP  BY
-    `TABLE_E`.`field_4033`, 
-	`TABLE_G`.`field_4019`
+    `TABLE_E`.`field_4033`
+    
 ORDER  BY `TABLE_A`.`field_4302` ASC 
+
 LIMIT  1000;
 ```
+# Tenemos que asegurarnos que las columnas usadas en WHERE tengan index 
 
 Describe brevemente, como optimizarías la consulta, que cosas consideras que
 deberían cambiarse y que indices añadirías a las tablas que intervienen en la

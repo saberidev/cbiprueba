@@ -36,35 +36,65 @@
 	console.log(navigate(5, roads, 0, 4));
 	// devolvería [0, 1, 3, 2, 4]. Tiempo más rápido is 5 + 2 + 2 + 5 = 14 minutes
 */
-var gps = function navigate(numberOfIntersections, roads, start, finish) {
 
-  var path = [start];
-  var distance;
-  var intersection = 0;
-  while (intersection < numberOfIntersections) {
-    distance = false;
-    roads.forEach(function(road){
-      
-      if(road.from == start){
-        if(!distance){
-          distance = road.drivingTime;
-        }else{
-          if(road.drivingTime < distance){
-            distance = road.drivingTime;
-            path.pop();
-          }
-        }
-        if(!path.includes(road.to)){
-          path.push(road.to);
-          start = road.to;
-        }
-      }
-    });
-    intersection++;
+let gps = function navigate(numberOfIntersections, roads, start, finish) {
+
+  if(start == finish){ //Significa que no moveremos
+  	return null;
   }
 
-  return path;
+  let path = [start]
+  let distance
+  let i = 0
+  let total_distance = 0
+
+  while (i < numberOfIntersections) { //Para que salgamos de loop como pedido
+
+    distance = false;
+    roads.forEach(function(road){
+
+      if(road.from == start){
+
+        if(!distance){
+          distance = road.drivingTime
+
+          if(!path.includes(road.to))
+          	path.push(road.to)
+		    	
+        }else{
+          if(road.to == finish && i == numberOfIntersections-1){
+          	distance = road.drivingTime
+            
+            if(path.length > i)
+            	path.pop()
+            path.push(road.to)
+	        }else{
+          	if(road.drivingTime <= distance){
+          		distance = road.drivingTime
+	            if(path.length-1 > i)
+            		path.pop()
+	            path.push(road.to)
+	          }
+          }
+        }
+      }
+
+    });
+
+    total_distance += distance
+    
+    if(path.slice(-1) != finish)
+    	start = path.slice(-1)
+    else
+    	break
+
+    i++
+  }
+
+  if(!path.includes(finish))
+  	return null
+
+  return path
 }
 
-
-module.exports = gps;
+module.exports = gps

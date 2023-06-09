@@ -21,100 +21,104 @@ namespace Cbi\Problems;
 */
 
 Class TresEnRaya{
-function boardState(array $board): int
-//function boardState()
-{
-//$board =   [[2,1,2],
-// 			[1,2,2],
-//	 		[1,2,1]];
-	
-	$winner = $this->checkHorizontal($board);
-	if(!$winner)
-		$winner = $this->checkVertical($board);
-	if(!$winner)
-		$winner = $this->checkCruz($board);
-	if(!$winner)
-		$winner = $this->checkResuelto($board);
-	
-	return $winner;
-}
+
+	function boardState(array $board): int
+	{
 
 
-private function checkHorizontal($board){
-
-	$winner = false;
-
-	foreach ($board as $b) {		
-		if(array_sum($b) == 6)
-			$winner = 2;
-		
-		elseif($b[0] == $b[1] && $b[1] == $b[2] && array_sum($b) == 3)
-			$winner = 1;
-	}
-
-	return $winner;
-}
-
-private function checkVertical($board){
-
-	$winner = false;
-
-	if($board[0][0] == $board[1][0] && $board[1][0] == $board[2][0]){
-		if($board[0][0] == 1)
-			$winner = 1;
-		elseif($board[0][0] == 2)
-			$winner = 2;
-	}
-	elseif($board[0][1] == $board[1][1] && $board[1][1] == $board[2][1]){
-		if($board[0][1] == 1)
-			$winner = 1;
-		elseif($board[0][1] == 2)
-			$winner = 2;
-	}
-	if($board[0][2] == $board[1][2] && $board[1][2] == $board[2][2]){
-		if($board[0][2] == 1)
-			$winner = 1;
-		elseif($board[0][2] == 2)
-			$winner = 2;
-	}
-
-	return $winner;
-	
-}
-
-private function checkCruz($board){
-
-	$winner = false;
-
-	if($board[0][0] == $board[1][1] && $board[1][1] == $board[2][2]){
-		if($board[0][0] == 1)
-			$winner = 1;
-		elseif($board[0][0] == 2)
-			$winner = 2;
-	}
-
-	elseif($board[0][2] == $board[1][1] && $board[1][1] == $board[2][0]){
-		if($board[0][2] == 1)
-			$winner = 1;
-		elseif($board[0][2] == 2)
-			$winner = 2;
-	}
-
-	return $winner;
-}
-
-private function checkResuelto($board){
-
-	$winner = 0;
-
-	foreach ($board as $b) {
-		foreach ($b as $casilla) {
-			if($casilla == 0)
-				$winner = -1;
-			break;
+		$rows = count($board);
+		for($i=0; $i<$rows; $i++){
+			if(count($board[$i]) != 3)
+				return false;
 		}
+		
+		$winner = $this->checkHorizontal($board);
+		if(!$winner)
+			$winner = $this->checkVertical($board);
+		if(!$winner)
+			$winner = $this->checkCruz($board);
+		if(!$winner)
+			$winner = $this->checkResuelto($board);
+		
+		return $winner;
 	}
 
-	return $winner;
-}
+
+	private function checkHorizontal($board){
+
+		$winner = false;
+
+		foreach ($board as $b) {		
+			if(array_sum($b) == 6)
+				$winner = 2;
+			
+			elseif($b[0] == $b[1] && $b[1] == $b[2] && array_sum($b) == 3)
+				$winner = 1;
+		}
+
+		return $winner;
+	}
+
+	private function checkVertical($board){
+
+		$winner = false;
+
+		if($board[0][0] == $board[1][0] && $board[1][0] == $board[2][0]){
+			if($board[0][0] == 1)
+				$winner = 1;
+			elseif($board[0][0] == 2)
+				$winner = 2;
+		}
+		elseif($board[0][1] == $board[1][1] && $board[1][1] == $board[2][1]){
+			if($board[0][1] == 1)
+				$winner = 1;
+			elseif($board[0][1] == 2)
+				$winner = 2;
+		}
+		if($board[0][2] == $board[1][2] && $board[1][2] == $board[2][2]){
+			if($board[0][2] == 1)
+				$winner = 1;
+			elseif($board[0][2] == 2)
+				$winner = 2;
+		}
+
+		return $winner;
+		
+	}
+
+	private function checkCruz($board){
+
+		$winner = false;
+
+		if($board[0][0] == $board[1][1] && $board[1][1] == $board[2][2]){
+			if($board[0][0] == 1)
+				$winner = 1;
+			elseif($board[0][0] == 2)
+				$winner = 2;
+		}
+
+		elseif($board[0][2] == $board[1][1] && $board[1][1] == $board[2][0]){
+			if($board[0][2] == 1)
+				$winner = 1;
+			elseif($board[0][2] == 2)
+				$winner = 2;
+		}
+
+		return $winner;
+	}
+
+	private function checkResuelto($board){
+
+		$winner = 0;
+
+		foreach ($board as $b) {
+			foreach ($b as $casilla) {
+				if($casilla == 0)
+					$winner = -1;
+				break;
+			}
+		}
+
+		return $winner;
+	}
 }
